@@ -1,0 +1,15 @@
+{
+  "name": "practica13-order-service",
+  "version": "1.0.0",
+  "description": "Sistema de Gestión de Inventario y Pedidos - Capa de Negocios Distribuida con gRPC",
+  "main": "src/middleware/grpcServer.js",
+  "scripts": {
+    "server": "node src/middleware/grpcServer.js",
+    "test": "node src/client/testClient.js"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.9.14",
+    "@grpc/proto-loader": "^0.7.10",
+    "uuid": "^9.0.1"
+  }
+}

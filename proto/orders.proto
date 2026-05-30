@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package orders;
+
+// ─── Contrato del servicio de procesamiento de órdenes ───────────────────────
+// Este archivo es el único "acuerdo" entre el cliente y el servidor distribuido.
+// Cualquier cambio aquí rompe la compatibilidad entre ambos lados de la red.
+
+service OrderService {
+  // Procesa una orden de compra aplicando todas las reglas de negocio
+  rpc ProcessOrder(OrderRequest) returns (OrderResponse);
+
+  // Consulta el estado actual de una orden por su ID
+  rpc GetOrderStatus(OrderStatusRequest) returns (OrderStatusResponse);
+}
+
+// ─── Mensajes de entrada ──────────────────────────────────────────────────────
+
+message OrderRequest {
+  string client_id    = 1;  // Identificador del cliente
+  string product_id   = 2;  // SKU del producto a comprar
+  int32  quantity     = 3;  // Cantidad solicitada
+  double unit_price   = 4;  // Precio unitario en MXN
+}
+
+message OrderStatusRequest {
+  string order_id = 1;
+}
+
+// ─── Mensajes de salida ───────────────────────────────────────────────────────
+
+message OrderResponse {
+  string order_id       = 1;  // UUID generado por el servidor
+  string status         = 2;  // CREADA | VALIDADA | APROBADA | RECHAZADA
+  double subtotal       = 3;  // Precio sin impuestos ni descuento
+  double discount       = 4;  // Monto del descuento aplicado (10% si subtotal > 1000)
+  double iva            = 5;  // IVA 16% aplicado sobre precio descontado
+  double total          = 6;  // Total final a pagar
+  string error_message  = 7;  // Mensaje de error en caso de rechazo o excepción
+}
+
+message OrderStatusResponse {
+  string order_id  = 1;
+  string status    = 2;
+  string client_id = 3;
+}
